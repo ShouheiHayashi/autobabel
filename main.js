@@ -14,11 +14,14 @@ define(function (require, exports, module) {
         switch (file.ext) {
         case 'jsx':
             try {
-                brackets.fs.writeFile(
-                    file.parentPath + file.name + '.compiled.js',
-                    babel.transform(file.contents, []).code,
-                    'utf8'
-                );
+                var path = file.parentPath + '/compiled';
+                brackets.fs.makedir(path, 0777, function() {
+                    brackets.fs.writeFile(
+                        path + '/' + file.name + '.js',
+                        babel.transform(file.contents, []).code,
+                        'utf8'
+                    );
+                });
             } catch (e) {
                 var DefaultDialogs = brackets.getModule('widgets/DefaultDialogs');
                 var Dialogs = brackets.getModule('widgets/Dialogs');
